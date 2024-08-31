@@ -27,6 +27,10 @@ def main():
     for salary in employee.salaries:
         print(salary)
 
+    print("Salary 1")
+    salary = session.query(Salary).get(1)
+    print(salary, salary.employee)
+
 
 if __name__ == "__main__":
     main()

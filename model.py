@@ -21,7 +21,7 @@ class Employee(Base):
     first_name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=False)
 
-    salaries = relationship("Salary")
+    salaries = relationship("Salary", back_populates="employee")
 
     def pay(self, amount, bonus, date=None, comments=None):
         salary = Salary(amount=amount, bonus=bonus)
@@ -52,6 +52,8 @@ class Salary(Base):
     comments = Column(String(150))
 
     employee_id = Column(Integer, ForeignKey("employees.id"), nullable=False)
+
+    employee = relationship("Employee", back_populates="salaries")
 
     def __repr__(self):
         return f"Salary({self.amount}, {self.date}, {self.employee_id})"
