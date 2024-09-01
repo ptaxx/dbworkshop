@@ -1,5 +1,6 @@
-from model import Employee, Salary
+from model import Employee, Department, Hashtag, Post
 from session import Session
+from sqlalchemy.exc import IntegrityError
 
 
 def main():
@@ -8,28 +9,25 @@ def main():
     employee = session.query(Employee).get(1)
     print(employee)
 
-    # salaries = session.query(Salary).filter(
-    #     Salary.employee_id == employee.id
-    # )
-    # for salary in salaries:
-    #     print(salary)
+    for department in employee.departments:
+        print(department)
 
-    employee.salaries.append(
-        Salary(amount=50000, bonus=5000, comments="Annual bonus")
-    )
-    # employee.pay(
-    #     amount=10000,
-    #     bonus=1000,
-    #     comments="Monthly salary",
-    # )
-    session.commit()
+    department = session.query(Department).get(1)
+    print(department)
+    for employee in department.employees:
+        print(employee)
 
-    for salary in employee.salaries:
-        print(salary)
+    hashtag = Hashtag(name="java")
+    post = Post(title="Java post", content="Java is not cool", author_id=1)
 
-    print("Salary 1")
-    salary = session.query(Salary).get(1)
-    print(salary, salary.employee)
+    post.hashtags.append(hashtag)
+
+    session.add(post)
+
+    try:
+        session.commit()
+    except IntegrityError:
+        session.rollback()
 
 
 if __name__ == "__main__":
